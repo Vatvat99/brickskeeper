@@ -1,0 +1,109 @@
+{% extends '::base.html.twig'  %}
+
+{% block title %} | {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('librairies/jquery-1.11.0.min.js') }}"></script>
+    <script src="{{ asset('librairies/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+    <script src="{{ asset('js/common.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="header">
+        <h1 class="logo">
+            <a href="{{ path('homepage') }}">
+                <div class="head"></div>
+                brickskeeper<span class="beta">beta</span><br>
+                <span>gestion de collection lego</span>
+            </a>
+        </h1>
+        <button id="navigation-button" class="navigation-button inactive" type="button">
+            <span class="icon-burger-menu size-24"></span>
+            <br>
+            menu
+        </button>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="logged-user">
+                <div class="picture-container">
+                    {# <?php if($_SESSION['front']['picture'] != '') { ?>
+                    <img class="resize-to-container" src="/assets/img/members/<?php echo $_SESSION['front']['picture']; ?>">
+                    <?php } ?> #}
+                </div>
+                <p>
+                    <a href="{# /members/profile/<?php echo $_SESSION['front']['id']; ?> #}" class="link">
+                        {# <?php echo $_SESSION['front']['firstname']; ?> <?php echo $_SESSION['front']['lastname']; ?> #}
+                    </a>
+                    <br>
+                    <a href="{# /members/logout #}">déconnexion</a>
+                </p>
+            </div>
+        {% else %}
+            <ul class="anonymous-user">
+                <li><a href="{# /members/signin #}">S'inscrire</a></li>
+                <li><a href="{# /members/login #}">Se connecter</a></li>
+            </ul>
+        {% endif %}
+    </div>
+    <div id="navigation" class="navigation">
+        <div id="right-lateral-header" class="right-lateral-header"></div>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <ul class="logged-user">
+                <li class="picture">
+                    <div class="picture-container">
+                        {# <?php if($_SESSION['front']['picture'] != '') { ?>
+                        <img class="resize-to-container" src="/assets/img/members/<?php echo $_SESSION['front']['picture']; ?>">
+                        <?php } ?>  #}
+                    </div>
+                </li>
+                <li class="name">
+                    <a href="{# /members/profile/<?php echo $_SESSION['front']['id']; ?> #}" class="link">
+                        {# <?php echo $_SESSION['front']['firstname']; ?> <?php echo $_SESSION['front']['lastname']; ?> #}
+                    </a>
+                </li>
+                <li class="logout">
+                    <a href="{# /members/logout #}" class="link">
+                        <span class="icon-logout size-16"></span>
+                    </a>
+                </li>
+            </ul>
+        {% else %}
+            <ul class="anonymous-user">
+                <li><a href="{# /members/signin #}">S'inscrire</a></li>
+                <li><a href="{# /members/login #}">Se connecter</a></li>
+            </ul>
+        {% endif %}
+        <ul class="links">
+            <li><a href="{{ path('homepage') }}">Rechercher des figs / sets</a></li>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <li><a href="{# /collection #}">Ma collection</a></li>
+            <li><a href="{# /offers/add #}">Déposer une annonce</a></li>
+            {% endif %}
+            <li><a href="{# /offers/listing #}">Toutes les annonces</a></li>
+        </ul>
+    </div>
+    {% block content %}{% endblock %}
+    <div class="footer">
+        <ul class="links">
+            <li>
+                <a href="{# /pages/contact #}" title="Signaler un problème au webmaster">
+                    Signaler un problème au webmaster
+                </a>
+            </li>
+        </ul>
+        <p>Tous droits réservés brickskeeper.fr 2015</p>
+    </div>
+    <div class="coming-soon-dialog dialog">
+        <div class="header">
+            <a href="#" class="close" title="Fermer"></a>
+        </div>
+        <div class="content">
+            <h2>Fonctionnalité en cours de développement</h2>
+        </div>
+    </div>
+{% endblock %}
