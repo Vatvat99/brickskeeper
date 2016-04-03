@@ -2,22 +2,17 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Serie
  *
- * @ORM\Table(name="brickskeeper_serie")
+ * @ORM\Table(name="brickskeeper_serie", options={"collate"="utf8mb4_unicode_ci", "charset"="utf8mb4"})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SerieRepository")
  */
 class Serie
 {
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Minifigure")
-     * @todo : Continuer les relations entre les entitées
-     */
-    private $minifigures;
 
     /**
      * @var int
@@ -38,9 +33,9 @@ class Serie
     /**
      * @var string
      *
-     * @ORM\Column(name="alias", type="string", length=255)
+     * @ORM\Column(name="slug", type="string", length=255)
      */
-    private $alias;
+    private $slug;
 
     /**
      * @var string
@@ -56,6 +51,32 @@ class Serie
      */
     private $priority;
 
+    /**
+     * @var Range
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Range", inversedBy="series", cascade={"persist"})
+     */
+    private $range;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Minifigure", mappedBy="serie", cascade={"persist", "remove"})
+     */
+    private $minifigures;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Set", mappedBy="serie", cascade={"persist", "remove"})
+     */
+    private $sets;
+
+    public function __construct()
+    {
+        $this->sets = new ArrayCollection();
+        $this->minifigures = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -92,27 +113,27 @@ class Serie
     }
 
     /**
-     * Set alias
+     * Set slug
      *
-     * @param string $alias
+     * @param string $slug
      *
      * @return Serie
      */
-    public function setAlias($alias)
+    public function setSlug($slug)
     {
-        $this->alias = $alias;
+        $this->slug = $slug;
 
         return $this;
     }
 
     /**
-     * Get alias
+     * Get slug
      *
      * @return string
      */
-    public function getAlias()
+    public function getSlug()
     {
-        return $this->alias;
+        return $this->slug;
     }
 
     /**
@@ -161,6 +182,106 @@ class Serie
     public function getPriority()
     {
         return $this->priority;
+    }
+
+    /**
+     * Set range
+     *
+     * @param Range $range
+     *
+     * @return Serie
+     */
+    public function setRange(Range $range)
+    {
+        $this->range = $range;
+
+        return $this;
+    }
+
+    /**
+     * Get range
+     *
+     * @return Range
+     */
+    public function getRange()
+    {
+        return $this->range;
+    }
+
+    /**
+     * Add minifigure
+     *
+     * @param Minifigure $minifigure
+     *
+     * @return Serie
+     */
+    public function addMinifigure(Minifigure $minifigure)
+    {
+        $this->minifigures[] = $minifigure;
+
+        return $this;
+    }
+
+    /**
+     * Remove minifigure
+     *
+     * @param Minifigure $minifigure
+     * 
+     * @return Serie
+     */
+    public function removeMinifigure(Minifigure $minifigure)
+    {
+        $this->minifigures->removeElement($minifigure);
+
+        return $this;
+    }
+
+    /**
+     * Get minifigures
+     *
+     * @return ArrayCollection
+     */
+    public function getMinifigures()
+    {
+        return $this->minifigures;
+    }
+
+    /**
+     * Add set
+     *
+     * @param Set $set
+     *
+     * @return Serie
+     */
+    public function addSet(Set $set)
+    {
+        $this->sets[] = $set;
+
+        return $this;
+    }
+
+    /**
+     * Remove set
+     *
+     * @param Set $set
+     * 
+     * @return Serie
+     */
+    public function removeSet(Set $set)
+    {
+        $this->sets->removeElement($set);
+        
+        return $this;
+    }
+
+    /**
+     * Get sets
+     *
+     * @return ArrayCollection
+     */
+    public function getSets()
+    {
+        return $this->sets;
     }
 
 }

@@ -2,12 +2,13 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Range
  *
- * @ORM\Table(name="brickskeeper_range")
+ * @ORM\Table(name="brickskeeper_range", options={"collate"="utf8mb4_unicode_ci", "charset"="utf8mb4"})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RangeRepository")
  */
 class Range
@@ -32,14 +33,14 @@ class Range
     /**
      * @var string
      *
-     * @ORM\Column(name="alias", type="string", length=255)
+     * @ORM\Column(name="slug", type="string", length=255)
      */
-    private $alias;
+    private $slug;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="color", type="string", length=255)
+     * @ORM\Column(name="color", type="string", length=7)
      */
     private $color;
 
@@ -57,6 +58,17 @@ class Range
      */
     private $priority;
 
+    /**
+     * @var ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Serie", mappedBy="range", cascade={"persist", "remove"})
+     */
+    private $series;
+    
+    public function __construct()
+    {
+        $this->series = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -93,27 +105,27 @@ class Range
     }
 
     /**
-     * Set alias
+     * Set slug
      *
-     * @param string $alias
+     * @param string $slug
      *
      * @return Range
      */
-    public function setAlias($alias)
+    public function setSlug($slug)
     {
-        $this->alias = $alias;
+        $this->slug = $slug;
 
         return $this;
     }
 
     /**
-     * Get alias
+     * Get slug
      *
      * @return string
      */
-    public function getAlias()
+    public function getSlug()
     {
-        return $this->alias;
+        return $this->aslug;
     }
 
     /**
@@ -186,6 +198,44 @@ class Range
     public function getPriority()
     {
         return $this->priority;
+    }
+    
+    /**
+     * Add serie
+     * 
+     * @param Serie $serie
+     * 
+     * @return Range
+     */
+    public function addSerie(Serie $serie)
+    {
+        $this->series[] = $serie;
+    
+        return $this;
+    }
+
+    /**
+     * Remove serie
+     * 
+     * @param Serie $serie
+     * 
+     * @return Range
+     */
+    public function removeSerie(Serie $serie)
+    {
+        $this->series->removeElement($serie);
+        
+        return $this;
+    }
+
+    /**
+     * Get series
+     * 
+     * @return ArrayCollection
+     */
+    public function getSeries()
+    {
+        return $this->series;
     }
 
 }

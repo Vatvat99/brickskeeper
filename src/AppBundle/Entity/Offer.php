@@ -2,12 +2,13 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Offer
  *
- * @ORM\Table(name="brickskeeper_offer")
+ * @ORM\Table(name="brickskeeper_offer", options={"collate"="utf8mb4_unicode_ci", "charset"="utf8mb4"})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\OfferRepository")
  */
 class Offer
@@ -32,28 +33,28 @@ class Offer
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="@todo", length="@todo")
+     * @ORM\Column(name="description", type="text") @todo check si le type mysql est bien text
      */
-    private description;
+    private $description;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string", length="20")
+     * @ORM\Column(name="type", type="string", length=20)
      */
     private $type;
 
     /**
-     * @var float ? @todo
+     * @var float
      *
-     * @ORM\Column(name="price", type="float", length=@todo)
+     * @ORM\Column(name="price", type="float")
      */
     private $price;
 
     /**
-     * @var boolean ? @todo
+     * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean ? @todo")
+     * @ORM\Column(name="active", type="boolean")
      */
     private $active;
 
@@ -63,6 +64,34 @@ class Offer
      * @ORM\Column(name="submitted_at", type="datetime")
      */
     private $submitted_at;
+
+    /**
+     * @var
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\OfferItem", mappedBy="offer", cascade={"persist", "remove"})
+     */
+    private $offer_items;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\OfferPicture", mappedBy="offer", cascade={"persist", "remove"})
+     */
+    private $offer_pictures;
+
+    public function __construct()
+    {
+        $this->offer_items = new ArrayCollection();
+        $this->offer_pictures = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -149,7 +178,7 @@ class Offer
     /**
      * Set price
      *
-     * @param float ? @todo $price
+     * @param float
      *
      * @return Offer
      */
@@ -163,7 +192,7 @@ class Offer
     /**
      * Get price
      *
-     * @return float ? @todo
+     * @return float
      */
     public function getPrice()
     {
@@ -173,7 +202,7 @@ class Offer
     /**
      * Set active
      *
-     * @param boolean ? @todo $active
+     * @param boolean
      *
      * @return Offer
      */
@@ -187,7 +216,7 @@ class Offer
     /**
      * Get active
      *
-     * @return boolean ? @todo
+     * @return boolean
      */
     public function isActive()
     {
@@ -213,9 +242,109 @@ class Offer
      *
      * @return \Datetime
      */
-    public function setSubmittedAt()
+    public function getSubmittedAt()
     {
         return $this->submitted_at;
+    }
+
+    /**
+     * Set user
+     *
+     * @param User
+     *
+     * @return Offer
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Add offer item
+     *
+     * @param OfferItem $offer_item
+     *
+     * @return Offer
+     */
+    public function addOfferItem(OfferItem $offer_item)
+    {
+        $this->offer_items[] = $offer_item;
+
+        return $this;
+    }
+
+    /**
+     * Remove offer item
+     *
+     * @param OfferItem $offer_item
+     *
+     * @return Offer
+     */
+    public function removeOfferItem(OfferItem $offer_item)
+    {
+        $this->offer_items->removeElement($offer_item);
+
+        return $this;
+    }
+
+    /**
+     * Get offer items
+     *
+     * @return ArrayCollection
+     */
+    public function getOfferItems()
+    {
+        return $this->offer_items;
+    }
+
+    /**
+     * Add offer picture
+     *
+     * @param OfferPicture $offer_picture
+     *
+     * @return Offer
+     */
+    public function addOfferPicture(OfferPicture $offer_picture)
+    {
+        $this->offer_pictures[] = $offer_picture;
+
+        return $this;
+    }
+
+    /**
+     * Remove offer picture
+     *
+     * @param OfferPicture $offer_picture
+     *
+     * @return Offer
+     */
+    public function removeOfferPicture(OfferPicture $offer_picture)
+    {
+        $this->offer_pictures->removeElement($offer_picture);
+
+        return $this;
+    }
+
+    /**
+     * Get offer pictures
+     *
+     * @return ArrayCollection
+     */
+    public function getOfferPictures()
+    {
+        return $this->offer_pictures;
     }
 
 }

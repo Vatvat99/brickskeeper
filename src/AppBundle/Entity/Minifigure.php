@@ -7,17 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Minifigure
  *
- * @ORM\Table(name="brickskeeper_minifigure")
+ * @ORM\Table(name="brickskeeper_minifigure", options={"collate"="utf8mb4_unicode_ci", "charset"="utf8mb4"})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MinifigureRepository")
  */
 class Minifigure
 {
-
-    /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Serie", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $serie;
     
     /**
      * @var int
@@ -38,9 +32,9 @@ class Minifigure
     /**
      * @var string
      *
-     * @ORM\Column(name="alias", type="string", length=255)
+     * @ORM\Column(name="slug", type="string", length=255)
      */
-    private $alias;
+    private $slug;
 
     /**
      * @var string
@@ -57,28 +51,10 @@ class Minifigure
     private $release_year;
 
     /**
-     * Get serie
-     *
-     * @return Serie
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Serie", inversedBy="minifigures", cascade="persist")
+     * @ORM\JoinColumn(nullable=false)
      */
-    public function getSerie()
-    {
-        return $this->serie;
-    }
-
-    /**
-     * Set serie
-     *
-     * @param Set $serie
-     *
-     * @return Minifigure
-     */
-    public function setSerie(Serie $serie)
-    {
-        $this->serie = $serie
-
-        return $this;
-    }
+    private $serie;
 
     /**
      * Get id
@@ -115,27 +91,27 @@ class Minifigure
     }
 
     /**
-     * Set alias
+     * Set slug
      *
-     * @param string $alias
+     * @param string $slug
      *
      * @return Minifigure
      */
-    public function setAlias($alias)
+    public function setSlug($slug)
     {
-        $this->alias = $alias;
+        $this->slug = $slug;
 
         return $this;
     }
 
     /**
-     * Get alias
+     * Get slug
      *
      * @return string
      */
-    public function getAlias()
+    public function getSlug()
     {
-        return $this->alias;
+        return $this->slug;
     }
 
     /**
@@ -184,6 +160,30 @@ class Minifigure
     public function getReleaseYear()
     {
         return $this->release_year;
+    }
+
+    /**
+     * Get serie
+     *
+     * @return Serie
+     */
+    public function getSerie()
+    {
+        return $this->serie;
+    }
+
+    /**
+     * Set serie
+     *
+     * @param Set $serie
+     *
+     * @return Minifigure
+     */
+    public function setSerie(Serie $serie)
+    {
+        $this->serie = $serie;
+
+        return $this;
     }
     
 }

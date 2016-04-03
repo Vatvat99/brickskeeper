@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CollectionItem
+ * OfferItem
  *
- * @ORM\Table(name="brickskeeper_collection_item", options={"collate"="utf8mb4_unicode_ci", "charset"="utf8mb4"})
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CollectionItemRepository")
+ * @ORM\Table(name="brickskeeper_offer_item", options={"collate"="utf8mb4_unicode_ci", "charset"="utf8mb4"})
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\OfferItemRepository")
  */
-class CollectionItem
+class OfferItem
 {
 
     /**
@@ -21,23 +21,23 @@ class CollectionItem
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Minifigure", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Offer", inversedBy="offer_items", cascade={"persist"})
+     * @ORM\JoinColumn(unique=false, nullable=false)
+     */
+    private $offer;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Minifigure", cascade={"persist"})
      */
     private $minifigure;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Set", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Set", cascade={"persist"})
      */
     private $set;
-    
+
     /**
      * @var int
      *
@@ -56,27 +56,27 @@ class CollectionItem
     }
 
     /**
-     * Set user
+     * Set offer
      *
-     * @param User $user
+     * @param Offer $offer
      *
-     * @return CollectionItem
+     * @return OfferItem
      */
-    public function setUser(User $user)
+    public function setOffer(Offer $offer)
     {
-        $this->user = $user;
+        $this->offer = $offer;
 
         return $this;
     }
 
     /**
-     * Get user
+     * Get offer
      *
-     * @return User
+     * @return Offer
      */
-    public function getUser()
+    public function getOffer()
     {
-        return $this->user;
+        return $this->offer;
     }
 
     /**
@@ -84,7 +84,7 @@ class CollectionItem
      *
      * @param Minifigure $minifigure
      *
-     * @return CollectionItem
+     * @return OfferItem
      */
     public function setMinifigure(Minifigure $minifigure = null)
     {
@@ -108,7 +108,7 @@ class CollectionItem
      *
      * @param Set $set
      *
-     * @return CollectionItem
+     * @return OfferItem
      */
     public function setSet(Set $set = null)
     {
@@ -132,7 +132,7 @@ class CollectionItem
      *
      * @param int $item_count
      *
-     * @return CollectionItem
+     * @return OfferItem
      */
     public function setItemCount($item_count)
     {

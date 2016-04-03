@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CollectionItem
+ * MinifigureSet
  *
- * @ORM\Table(name="brickskeeper_collection_item", options={"collate"="utf8mb4_unicode_ci", "charset"="utf8mb4"})
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CollectionItemRepository")
+ * @ORM\Table(name="brickskeeper_minifigure_set", options={"collate"="utf8mb4_unicode_ci", "charset"="utf8mb4"})
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\MinifigureSetRepository")
  */
-class CollectionItem
+class MinifigureSet
 {
 
     /**
@@ -21,29 +21,29 @@ class CollectionItem
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Minifigure", cascade={"persist"})
-     */
-    private $minifigure;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Set", cascade={"persist"})
-     */
-    private $set;
-    
     /**
      * @var int
      *
      * @ORM\Column(name="item_count", type="integer")
      */
     private $item_count;
+
+    /**
+     * @var Minifigure
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Minifigure", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $minifigure;
+
+    /**
+     * @var Set
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Set", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $set;
 
     /**
      * Get id
@@ -56,27 +56,27 @@ class CollectionItem
     }
 
     /**
-     * Set user
+     * Set item_count
      *
-     * @param User $user
+     * @param int $item_count
      *
-     * @return CollectionItem
+     * @return MinifigureSet
      */
-    public function setUser(User $user)
+    public function setItemCount($item_count)
     {
-        $this->user = $user;
+        $this->item_count = $item_count;
 
         return $this;
     }
 
     /**
-     * Get user
+     * Get item_count
      *
-     * @return User
+     * @return int
      */
-    public function getUser()
+    public function getItemCount()
     {
-        return $this->user;
+        return $this->item_count;
     }
 
     /**
@@ -84,9 +84,9 @@ class CollectionItem
      *
      * @param Minifigure $minifigure
      *
-     * @return CollectionItem
+     * @return MinifigureSet
      */
-    public function setMinifigure(Minifigure $minifigure = null)
+    public function setMinifigure($minifigure)
     {
         $this->minifigure = $minifigure;
 
@@ -108,9 +108,9 @@ class CollectionItem
      *
      * @param Set $set
      *
-     * @return CollectionItem
+     * @return MinifigureSet
      */
-    public function setSet(Set $set = null)
+    public function setSet($set)
     {
         $this->set = $set;
 
@@ -125,30 +125,6 @@ class CollectionItem
     public function getSet()
     {
         return $this->set;
-    }
-
-    /**
-     * Set item_count
-     *
-     * @param int $item_count
-     *
-     * @return CollectionItem
-     */
-    public function setItemCount($item_count)
-    {
-        $this->item_count = $item_count;
-
-        return $this;
-    }
-
-    /**
-     * Get item_count
-     *
-     * @return int
-     */
-    public function getItemCount()
-    {
-        return $this->item_count;
     }
 
 }

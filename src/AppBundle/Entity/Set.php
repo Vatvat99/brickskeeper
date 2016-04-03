@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Set
  *
- * @ORM\Table(name="brickskeeper_set")
+ * @ORM\Table(name="brickskeeper_set", options={"collate"="utf8mb4_unicode_ci", "charset"="utf8mb4"})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SetRepository")
  */
 class Set
@@ -39,9 +39,9 @@ class Set
     /**
      * @var string
      *
-     * @ORM\Column(name="alias", type="string", length=255)
+     * @ORM\Column(name="slug", type="string", length=255)
      */
-    private $alias;
+    private $slug;
 
     /**
      * @var string
@@ -51,18 +51,24 @@ class Set
     private $picture;
 
     /**
-     * @var \Datetime
+     * @var string
      *
-     * @ORM\Column(name="release_year", type="datetime")
+     * @ORM\Column(name="release_year", type="string", length=4)
      */
     private $release_year;
 
     /**
-     * @var float ? @todo
+     * @var float
      * 
-     * @ORM\Column(name="price", type="float", length=@todo)
+     * @ORM\Column(name="price", type="float")
      */
     private $price;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Serie", inversedBy="sets", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $serie;
 
     /**
      * Get id
@@ -123,27 +129,27 @@ class Set
     }
 
     /**
-     * Set alias
+     * Set slug
      *
-     * @param string $alias
+     * @param string $slug
      *
      * @return Set
      */
-    public function setAlias($alias)
+    public function setSlug($slug)
     {
-        $this->alias = $alias;
+        $this->slug = $slug;
 
         return $this;
     }
 
     /**
-     * Get alias
+     * Get slug
      *
      * @return string
      */
-    public function getAlias()
+    public function getSlug()
     {
-        return $this->alias;
+        return $this->slug;
     }
 
     /**
@@ -171,27 +177,75 @@ class Set
     }
 
     /**
-     * Set releaseYear
+     * Set release_year
      *
-     * @param \DateTime $releaseYear
+     * @param string $release_year
      *
      * @return Set
      */
-    public function setReleaseYear($releaseYear)
+    public function setReleaseYear($release_year)
     {
-        $this->release_year = $releaseYear;
+        $this->release_year = $release_year;
 
         return $this;
     }
 
     /**
-     * Get releaseYear
+     * Get release_year
      *
-     * @return \DateTime
+     * @return string
      */
     public function getReleaseYear()
     {
         return $this->release_year;
+    }
+
+    /**
+     * Set price
+     *
+     * @param float $price
+     *
+     * @return Set
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set serie
+     *
+     * @param Serie $serie
+     *
+     * @return Set
+     */
+    public function setSerie(Serie $serie)
+    {
+        $this->serie = $serie;
+
+        return $this;
+    }
+
+    /**
+     * Get serie
+     *
+     * @return Serie
+     */
+    public function getSerie()
+    {
+        return $this->serie;
     }
 
 }
