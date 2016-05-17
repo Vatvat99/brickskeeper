@@ -1,0 +1,20 @@
+-------------------------------------------------
+{{ app_name|capitalize }} - gestion de collection lego
+-------------------------------------------------
+
+:::: Votre inscription sur le site ::::::::::::::
+
+Bonjour {{ user.firstname|capitalize }}
+
+Merci de votre inscription sur {{ app_name|capitalize }} - gestion de collection lego.
+
+Veuillez confirmer votre adresse e-mail afin de pouvoir utiliser votre compte. Pour cela, copiez-collez ce lien dans votre navigateur :
+
+{{ url('user_activate', {'email': user.email, 'activationKey': user.activationKey}) }}
+
+Pour des raisons de sécurité, votre mot de passe n'a pas été envoyé dans cet e-mail. En cas d'oubli, vous pouvez le réinitialiser en accédant à cette page :
+
+{{ url('user_forgotten_password') }}
+
+-------------------------------------------------
+L’équipe {{ app_name|capitalize }} - gestion de collection lego

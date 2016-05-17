@@ -29,12 +29,12 @@ class CollectionItem
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Minifigure", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Minifigure", inversedBy="collection_items", cascade={"persist"})
      */
     private $minifigure;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Set", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Set", inversedBy="collection_items", cascade={"persist"})
      */
     private $set;
     

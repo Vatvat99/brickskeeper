@@ -1,0 +1,15 @@
+{% extends ':front:layout.html.twig' %}
+
+{% block title %}Mot de passe oublié{{ parent() }}{% endblock %}
+
+{% block body_class %}forgotten-password{% endblock %}
+
+{% block content %}
+    <div id="content" class="content col-pd">
+        <div class="confirmation col-pd">
+            <p><img src="{{ asset('img/confirmation-mail-01.png') }}" alt="Confirmation e-mail"></p>
+            <p>Un e-mail vient d’être envoyé à l’adresse <em>{# <?php echo $email; ?> #}</em>.<br>
+                Cliquez sur le lien à l’intérieur pour obtenir un nouveau mot de passe.</p>
+        </div>
+    </div>
+{% endblock %}

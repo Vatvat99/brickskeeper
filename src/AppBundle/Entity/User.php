@@ -3,12 +3,14 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="brickskeeper_user", options={"collate"="utf8mb4_unicode_ci", "charset"="utf8mb4"})
  */
-class User
+class User implements AdvancedUserInterface, \Serializable
 {
 
     /**
@@ -22,6 +24,7 @@ class User
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $lastname;
 
@@ -29,15 +32,26 @@ class User
      * @var string
      *
      * @ORM\Column(name="firstname", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $firstname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255, options={"collation":"utf8mb4_bin"})
+     * @ORM\Column(name="email", type="string", length=60, unique=true, options={"collation":"utf8mb4_bin"})
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
+
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
 
     /**
      * @var string
@@ -51,28 +65,112 @@ class User
      *
      * @ORM\Column(name="activation_key", type="string", length=40)
      */
-    private $activation_key;
+    private $activationKey;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="active", type="integer")
+     * @ORM\Column(name="is_active", type="boolean")
      */
-    private $active;
+    private $isActive;
 
     /**
      * @var string
      *
      * @ORM\Column(name="registration_date", type="date")
      */
-    private $registration_date;
+    private $registrationDate;
 
     /**
      * @var UserProfile
      *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\UserProfile", mappedBy="user", cascade={"persist", "remove"})
+     * @Assert\Type(type="AppBundle\Entity\UserProfile")
+     * @Assert\Valid()
      */
-    private $user_profile;
+    private $userProfile;
+
+    public function __construct()
+    {
+        $this->isActive = false;
+    }
+
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    public function eraseCredentials()
+    {
+    }
+
+    /*
+     * Vérifie si le compte de l'utilisateur à expiré
+     * (requis par l'implémentation de AdvanceUserInterface)
+     */
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    /*
+     * Vérifie si l'utilisateur est bloqué
+     * (requis par l'implémentation de AdvanceUserInterface)
+     */
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    /*
+     * Vérifie si les identifiants du compte utilisateur ont expiré
+     * (requis par l'implémentation de AdvanceUserInterface)
+     */
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    /*
+     * Vérifie si le compte utilisateur est actif
+     * (requis par l'implémentation de AdvanceUserInterface)
+     */
+    public function isEnabled()
+    {
+        return $this->isActive;
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->email,
+            $this->password,
+            $this->isActive
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->email,
+            $this->password,
+            $this->isActive
+            ) = unserialize($serialized);
+    }
 
     /**
      * Get id
@@ -157,6 +255,31 @@ class User
     }
 
     /**
+     * Set plainPassword
+     *
+     * @param string $plainPassword
+     *
+     * @return User
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * Get plainPassword
+     *
+     * @return string
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+
+    /**
      * Set password
      *
      * @param string $password
@@ -181,27 +304,27 @@ class User
     }
 
     /**
-     * Set activation_key
+     * Set activationKey
      *
-     * @param string $activation_key
+     * @param string $activationKey
      *
      * @return User
      */
-    public function setActivationKey($activation_key)
+    public function setActivationKey($activationKey)
     {
-        $this->activation_key = $activation_key;
+        $this->activationKey = $activationKey;
 
         return $this;
     }
 
     /**
-     * Get activation_key
+     * Get activationKey
      *
      * @return string
      */
     public function getActivationKey()
     {
-        return $this->activation_key;
+        return $this->activationKey;
     }
 
     /**
@@ -213,7 +336,7 @@ class User
      */
     public function setActive($active)
     {
-        $this->active = $active;
+        $this->isActive = $active;
 
         return $this;
     }
@@ -225,55 +348,55 @@ class User
      */
     public function isActive()
     {
-        return $this->active;
+        return $this->isActive;
     }
 
     /**
-     * Set registration_date
+     * Set registrationDate
      *
-     * @param \DateTime $registration_date
+     * @param \DateTime $registrationDate
      *
      * @return User
      */
-    public function setRegistrationDate($registration_date)
+    public function setRegistrationDate($registrationDate)
     {
-        $this->registration_date = $registration_date;
+        $this->registrationDate = $registrationDate;
 
         return $this;
     }
 
     /**
-     * Get registration_date
+     * Get registrationDate
      *
      * @return \DateTime
      */
     public function getRegistrationDate()
     {
-        return $this->registration_date;
+        return $this->registrationDate;
     }
 
     /**
-     * Set user_profile
+     * Set userProfile
      *
-     * @param UserProfile $user_profile
+     * @param UserProfile $userProfile
      *
      * @return User
      */
-    public function setUserProfile($user_profile)
+    public function setUserProfile($userProfile)
     {
-        $this->user_profile = $user_profile;
+        $this->userProfile = $userProfile;
 
         return $this;
     }
 
     /**
-     * Get user_profile
+     * Get userProfile
      *
      * @return UserProfile
      */
     public function getUserProfile()
     {
-        return $this->user_profile;
+        return $this->userProfile;
     }
 
 }

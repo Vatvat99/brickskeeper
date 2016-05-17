@@ -1,0 +1,258 @@
+{% extends ':front:layout.html.twig' %}
+
+{% block title %}{{ user.firstname }} {{ user.lastname }}{{ parent() }}{% endblock %}
+
+{% block body_class %}members-my-profile{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/my-profile.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="content" class="content">
+        <div class="profile-header col-pd font-size-zero">
+            {% for message in app.session.flashbag.get('success') %}
+                <div class="col-xs-12 col-pd font-size-default">
+                    <p class="success">
+                        {{ message }}
+                    </p>
+                </div>
+            {% endfor %}
+            {% for message in app.session.flashbag.get('error') %}
+                <div class="col-xs-12 col-pd font-size-default">
+                    <p class="error">
+                        {{ message }}
+                    </p>
+                </div>
+            {% endfor %}
+            <div class="col-xs-12 col-s-8 col-pd font-size-default">
+                <div class="profile-header-top">
+                    <div class="member-picture">
+                        <div class="picture-container">
+                            {% if user.userProfile.picture is not empty %}
+                                <img src="{{ asset('img/members/' ~ user.userProfile.picture) | imagine_filter('big_thumbnail') }}">
+                            {% else %}
+                                <img src="{{ asset('img/members/no-picture.png') }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="profile-header-title">
+                        <h1 class="title">
+                            {{ user.firstname }} {{ user.lastname }}
+                        </h1>
+                        <p class="subtitle">
+                            {{ user.userProfile.city }}
+                            {% if user.userProfile.city is not empty and user.userProfile.region is not empty %}, {% endif %}
+                            {{ user.userProfile.region }}
+                            {% if user.userProfile.city is not empty or user.userProfile.region is not empty %}<br>{% endif %}
+                            {{ user.email }}
+                        </p>
+                    </div>
+                </div>
+                {% if user.userProfile.message is not empty %}
+                    <p class="quote">
+                        <span class="icon-quote-left"></span>
+                        <span class="icon-quote-right"></span>
+                        {{ user.userProfile.message }}
+                    </p>
+                {% endif %}
+            </div>
+            <div class="col-xs-12 col-s-4 col-pd font-size-default txt-right">
+                <p>
+                    <a class="action-link" href="{{ path('user_edit') }}">
+                        <span class="text">Compléter mon profil</span>
+                        <span class="icon-pencil"></span>
+                    </a>
+                    <a href="{{ path('user_collection') }}" class="btn-1-s">Accéder à ma collection</a>
+                </p>
+            </div>
+        </div>
+        <div class="col-pd">
+            <div class="col-pd">
+                <div class="horizontal-border"></div>
+            </div>
+        </div>
+        <div class="col-s-pd font-size-zero">
+            <div class="col-xs-12 col-s-8 col font-size-default">
+                <div class="col-pd">
+                    <div class="col-pd col-s-no-pd">
+                        <h3>Activité récente</h3>
+                    </div>
+                </div>
+                <div class="col-s-pd">
+                    <div class="activities">
+                        <div class="activity-container uneven">
+                            <div class="activity-member-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/members/572dbbda23cd8.jpg') }}">
+                                </div>
+                            </div>
+                            <div class="activity-content">
+                                <span class="member-name">Julie Deslanges</span> a ajouté la figurine <span class="minifigure-name">Fermier</span> à sa collection
+                                <div class="date">le 1 septembre 2014 à 17h52</div>
+                            </div>
+                            <div class="activity-minifigure-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/minifigures/57x57/23-fermier.jpg') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-container even">
+                            <div class="activity-member-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/members/572dbbf05af04.jpg') }}">
+                                </div>
+                            </div>
+                            <div class="activity-content">
+                                <span class="member-name">Marie Desmont</span> a ajouté la figurine <span class="minifigure-name">Homme requin</span> à sa collection
+                                <div class="date">le 1 septembre 2014 à 17h52</div>
+                            </div>
+                            <div class="activity-minifigure-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/minifigures/57x57/32-homme-requin.jpg') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-container uneven">
+                            <div class="activity-member-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/members/572dbbda23cd8.jpg') }}">
+                                </div>
+                            </div>
+                            <div class="activity-content">
+                                <span class="member-name">Julie Deslanges</span> a ajouté la figurine <span class="minifigure-name">Monstre scientifique</span> à sa collection
+                                <div class="date">le 1 septembre 2014 à 17h52</div>
+                            </div>
+                            <div class="activity-minifigure-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/minifigures/57x57/37-monstre-scientifique.jpg') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-container even">
+                            <div class="activity-member-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/members/572dbc2058835.jpg') }}">
+                                </div>
+                            </div>
+                            <div class="activity-content">
+                                <span class="member-name">Céline Dumesnil</span> a ajouté la figurine <span class="minifigure-name">Astronaute</span> à sa collection
+                                <div class="date">le 1 septembre 2014 à 17h52</div>
+                            </div>
+                            <div class="activity-minifigure-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/minifigures/57x57/20-astronaute.jpg') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-container uneven">
+                            <div class="activity-member-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/members/572dbc41e658b.jpg') }}">
+                                </div>
+                            </div>
+                            <div class="activity-content">
+                                <span class="member-name">Jérome Meunier</span> a ajouté la figurine <span class="minifigure-name">Anaki Skywalker</span> à sa collection
+                                <div class="date">le 1 septembre 2014 à 17h52</div>
+                            </div>
+                            <div class="activity-minifigure-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/minifigures/57x57/1-anakin-skywalker.jpg') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-container even">
+                            <div class="activity-member-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/members/572dbc41e658b.jpg') }}">
+                                </div>
+                            </div>
+                            <div class="activity-content">
+                                <span class="member-name">Jérome Meunier</span> a ajouté la figurine <span class="minifigure-name">Pilote clone</span> à sa collection
+                                <div class="date">le 1 septembre 2014 à 17h52</div>
+                            </div>
+                            <div class="activity-minifigure-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/minifigures/57x57/3-pilote-clone.jpg') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-container uneven">
+                            <div class="activity-member-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/members/572dbc30c3b5c.jpg') }}">
+                                </div>
+                            </div>
+                            <div class="activity-content">
+                                <span class="member-name">Marjorie Blanc</span> a ajouté la figurine <span class="minifigure-name">Faune</span> à sa collection
+                                <div class="date">le 1 septembre 2014 à 17h52</div>
+                            </div>
+                            <div class="activity-minifigure-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/minifigures/57x57/24-faune.jpg') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-container even">
+                            <div class="activity-member-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/members/572dbc30c3b5c.jpg') }}">
+                                </div>
+                            </div>
+                            <div class="activity-content">
+                                <span class="member-name">Marjorie Blanc</span> a ajouté la figurine <span class="minifigure-name">Sorcière loufoque</span> à sa collection
+                                <div class="date">le 1 septembre 2014 à 17h52</div>
+                            </div>
+                            <div class="activity-minifigure-thumbnail">
+                                <div class="picture-container">
+                                    <img class="resize-to-container" src="{{ asset('img/minifigures/57x57/38-sorciere-loufoque.jpg') }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-s-4 col font-size-default">
+                <div class="col-pd">
+                    <div class="col-pd col-s-no-pd">
+                        <h3>Membres suivis</h3>
+                        <div class="followed-members font-size-zero">
+                            <div class="picture-container font-size-default">
+                                <img class="resize-to-container" src="{{ asset('img/members/572dbc2058835.jpg') }}">
+                            </div>
+                            <div class="picture-container font-size-default">
+                                <img class="resize-to-container" src="{{ asset('img/members/572dbc41e658b.jpg') }}">
+                            </div>
+                            <div class="picture-container font-size-default">
+                                <img class="resize-to-container" src="{{ asset('img/members/572dbbf05af04.jpg') }}">
+                            </div>
+                            <div class="picture-container font-size-default">
+                                <img class="resize-to-container" src="{{ asset('img/members/572dbc30c3b5c.jpg') }}">
+                            </div>
+                            <div class="picture-container font-size-default">
+                                <img class="resize-to-container" src="{{ asset('img/members/572dbbda23cd8.jpg') }}">
+                            </div>
+                        </div>
+                        <h3>Trouver un membre</h3>
+                        {{ form_start(form, {'attr': {'class': 'search-form'}}) }}
+                        {# <form class="search-form" method="post"> #}
+                            {# <?php if(array_key_exists('search', $errors)) { ?>
+                            <p class="error">
+                                <?php echo $errors['search']; ?>
+                            </p>
+                            <?php } ?> #}
+                            {{ form_errors(form.email) }}
+                            <div class="input-container">
+                                <button type="submit"><span class="icon-search"></span></button>
+                                {{ form_widget(form.email, {'attr': {'placeholder': 'Adresse e-mail du membre'}}) }}
+                                {# <input type="text" id="email" name="email" value="Adresse e-mail du membre"> #}
+                            </div>
+                        {{ form_end(form) }}
+                        {# </form> #}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

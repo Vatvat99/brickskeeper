@@ -120,6 +120,24 @@ class LoadCollectionItemData extends AbstractFixture implements OrderedFixtureIn
                 'set' => $this->getReference('set_2'),
                 'item_count' => 1,
             ],
+            19 => [
+                'user' => $this->getReference('user_3'),
+                'minifigure' => $this->getReference('minifigure_32'),
+                'set' => null,
+                'item_count' => 1,
+            ],
+            20 => [
+                'user' => $this->getReference('user_3'),
+                'minifigure' => $this->getReference('minifigure_33'),
+                'set' => null,
+                'item_count' => 1,
+            ],
+            21 => [
+                'user' => $this->getReference('user_3'),
+                'minifigure' => null,
+                'set' => $this->getReference('set_2'),
+                'item_count' => 1,
+            ],
         ];
 
         $i = 1;

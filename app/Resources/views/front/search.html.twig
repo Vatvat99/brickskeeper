@@ -1,0 +1,140 @@
+{% extends ':front:layout.html.twig' %}
+
+{% block title %}Recherche{{ parent() }}{% endblock %}
+
+{% block body_class %}search{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/search.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div id="content" class="content offset col-xs-12 col-pd">
+            <h2 class="result-count dashed">
+                {{ attribute(results, itemType ~ 's_count') }} {{ itemType }}{{ (attribute(results, itemType ~ 's_count') == 1) ? '' : 's' }}
+                <div class="search-btn-container">
+                    <div class="search-btn">
+                        <a id="right-lateral-panel-link" class="coming-soon search-link" href="#"></a>
+                        <p class="search-label">rechercher</p>
+                    </div>
+                </div>
+            </h2>
+            {% for range in results.ranges %}
+                {# Si la gamme conteient des items (figurines ou sets) #}
+                {% if attribute(range, itemType ~ 's_count') > 0 %}
+                    <h1 class="range-title">
+                        {{ range.name }}
+                        <span class="range-count">
+                            {{ attribute(range, itemType ~ 's_count') }} {{ (itemType == 'set') ? 'set' : 'fig' }}{{ (attribute(range, itemType ~ 's_count') == 1) ? '' : 's' }}
+                        </span>
+                    </h1>
+                {% endif %}
+                {% for serie in range.series %}
+                    {# Si la série contient des items (figurines ou sets #}
+                    {% if attribute(serie, itemType ~ 's_count') > 0 %}
+                        <h3 class="serie-title line">
+                            <span>{{ serie.name }}</span>
+                            <span class="serie-count">
+                                {{ attribute(serie, itemType ~ 's_count') }} {{ (itemType == 'set') ? 'set' : 'fig' }}{{ (attribute(serie, itemType ~ 's_count') == 1) ? '' : 's' }}
+                            </span>
+                        </h3>
+                        <div class="row serie font-size-zero">
+                            {% for item in attribute(serie, itemType ~ 's') %}
+                                <div class="item-col font-size-default">
+                                    <div class="item-container">
+                                        <div class="item">
+                                            {# Si une collection existe (l'utilisateur est connecté) #}
+                                            {% if collection is not empty %}
+                                                {# Si une des gammes correspond à la gamme de l'élément en train d'être affiché #}
+                                                {% if collection.ranges[range.id] is defined %}
+                                                    {# Si une des séries correspond à la série de l'élément en train d'être affiché #}
+                                                    {% if collection.ranges[range.id].series[serie.id] is defined %}
+                                                        {# Si l'élément dans la collection correspond à celui en train d'être affiché #}
+                                                        {% if attribute(collection.ranges[range.id].series[serie.id], itemType ~ 's') is defined %}
+                                                            {# On affiche le nombre présent dans la collection #}
+                                                            <div class="item-count">
+                                                                x{{ attribute(collection.ranges[range.id].series[serie.id], itemType ~ 's')[item.id].count }}
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+                                            <a class="add-link" href="#">
+                                                Ajouter à ma collection
+                                                <img src="{{ asset('img/plus-02.png') }}">
+                                            </a>
+                                            <p class="name">- {{ (item.number is defined) ? item.number : item.id }} -<br>{{ item.name }}</p>
+                                            <div class="transactions">
+                                                {% if item.sell_total != 0 or item.exchange_total != 0 %}
+                                                    <a href="{{ path('offers_listing', {'itemType': itemType, 'id': item.id}) }}" title="Voir les annonces pour &quot;{{ item.name }}&quot;">
+                                                {% endif %}
+                                                <p>
+                                                    <span class="number">{{ item.sell_total }}</span>en vente
+                                                    <br>
+                                                    {% if item.price is not empty and item.price != 0 %}
+                                                        dès {{ item.price|replace({',00': ''}) }} €
+                                                    {% endif %}
+                                                </p>
+                                                <p>
+                                                    <span class="number">{{ item.exchange_total }}</span>en<br>échange
+                                                </p>
+                                                {% if item.sell_total != 0 or item.exchange_total != 0 %}
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                            <div class="picture-container">
+                                                <img class="picture resize-to-container" src="{{ asset('img/' ~ itemType ~ 's/209x238/' ~ ((item.picture is not empty) ? item.picture : 'no-picture.png')) }}" alt="{{ item.name }}">
+                                            </div>
+                                        </div>
+                                        <div class="item-panel item-number animated">
+                                            <div class="item-number-content">
+                                                <h3 class="title">Nombre d'exemplaires</h3>
+                                                <form>
+                                                    <div class="input-container">
+                                                        <div class="less-item-col">
+                                                            <button type="button" class="less-item-button">
+                                                                <span class="icon-remove-alt"></span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="item-number-col">
+                                                            <input type="text" class="item-number-input" name="item_number" value="1" readonly>
+                                                            <input type="hidden" class="item-id-input" name="item_id" value="{{ item.id }}">
+                                                            <input type="hidden" class="item-type-input" name="item_type" value="{{ itemType }}">
+                                                        </div>
+                                                        <div class="more-item-col">
+                                                            <button type="button" class="more-item-button">
+                                                                <span class="icon-add-alt"></span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <button type="submit" class="add-button btn-2-m">Ajouter</button>
+                                                </form>
+                                            </div>
+                                            <div class="item-confirmation-content hidden">
+                                                <img src="{{ asset('img/success-02.png') }}" alt="Succès">
+                                                <h3>Ajouté !</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            <h3 class="txt-center line">
+                <span>Perdu quelque-chose ?</span>
+            </h3>
+            <div class="request font-size-zero">
+                <p class="request-description font-size-default">
+                    Si vous ne trouvez pas la figurine que vous cherchez, c’est peut-être que celle-ci n’existe pas encore sur le site. Ne paniquez pas, vous pouvez la rajouter vous-même.
+                </p>
+                <p class="request-button font-size-default">
+                    <a class="coming-soon btn-1-m" href="/request">Soumettre une nouvelle fig</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

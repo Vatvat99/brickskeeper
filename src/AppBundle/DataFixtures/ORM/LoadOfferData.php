@@ -15,7 +15,7 @@ class LoadOfferData extends AbstractFixture implements OrderedFixtureInterface
             1 => [
                 'title' => 'Voleuse de pierres précieuses',
                 'description' => 'Annonce de test avec seulement une figurine avec photos.',
-                'type' => 'Echange',
+                'type' => ['Echange'],
                 'price' => '0.00',
                 'active' => '1',
                 'submitted_at' => new \Datetime('2016-04-03 12:30:12'),
@@ -30,11 +30,20 @@ n°2 la sorcière loufoque à 3€.
 n°3 la gargouille à 3€.
 
 Envoi possible en plus en lettre éco ou autre mode d\'envoi sur demande.',
-                'type' => 'Vente',
+                'type' => ['Echange', 'Vente'],
                 'price' => '9.00',
                 'active' => '1',
                 'submitted_at' => new \Datetime('2016-04-03 19:27:00'),
                 'user' => $this->getReference('user_1'),
+            ],
+            3 => [
+                'title' => 'Mes figurines',
+                'description' => 'Je vends cette figurine que je n\'aime plus, voilà.',
+                'type' => ['Vente'],
+                'price' => '8.50',
+                'active' => '1',
+                'submitted_at' => new \Datetime('2016-05-07 12:03:00'),
+                'user' => $this->getReference('user_2'),
             ],
         ];
 

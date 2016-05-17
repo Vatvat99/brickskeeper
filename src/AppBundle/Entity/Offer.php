@@ -15,6 +15,11 @@ class Offer
 {
 
     /**
+     * Nombre d'offres affichées sur une page
+     */
+    const NUM_ITEMS = 32;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer")
@@ -40,7 +45,7 @@ class Offer
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string", length=20)
+     * @ORM\Column(name="type", type="simple_array")
      */
     private $type;
 
@@ -246,6 +251,16 @@ class Offer
     {
         return $this->submitted_at;
     }
+    
+    /**
+     * Get author
+     *
+     * @return string
+     */
+    public function getAuthor()
+    {
+        return $this->getUser()->getFirstname() . ' ' . $this->getUser()->getLastname();
+    }
 
     /**
      * Set user
@@ -345,6 +360,21 @@ class Offer
     public function getOfferPictures()
     {
         return $this->offer_pictures;
+    }
+
+    /**
+     * Génère le nombre de jour restant avant la suppression de l'annonce
+     */
+    public function getRemainingDays() {
+
+        $todayTimestamp = time();
+        $submittedAt = $this->submitted_at;
+        $publicationTimestamp = strtotime($submittedAt->format('Y-m-d H:i:s'));
+        $removalTimestamp = $publicationTimestamp + (2*31*24*60*60);
+        $remainingDays = round(($removalTimestamp - $todayTimestamp) / (60*60*24));
+
+        return $remainingDays;
+
     }
 
 }

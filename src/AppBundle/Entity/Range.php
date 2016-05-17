@@ -125,7 +125,7 @@ class Range
      */
     public function getSlug()
     {
-        return $this->aslug;
+        return $this->slug;
     }
 
     /**

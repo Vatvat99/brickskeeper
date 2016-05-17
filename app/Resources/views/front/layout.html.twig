@@ -28,70 +28,74 @@
             <br>
             menu
         </button>
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             <div class="logged-user">
                 <div class="picture-container">
-                    {# <?php if($_SESSION['front']['picture'] != '') { ?>
-                    <img class="resize-to-container" src="/assets/img/members/<?php echo $_SESSION['front']['picture']; ?>">
-                    <?php } ?> #}
+                    {% if app.user.userProfile is not empty %}
+                         {% if app.user.userProfile.picture is not empty %}
+                             <img src="{{ asset('img/members/' ~ app.user.userProfile.picture) | imagine_filter('header_thumbnail') }}">
+                        {% endif %}
+                    {% endif %}
                 </div>
                 <p>
-                    <a href="{# /members/profile/<?php echo $_SESSION['front']['id']; ?> #}" class="link">
-                        {# <?php echo $_SESSION['front']['firstname']; ?> <?php echo $_SESSION['front']['lastname']; ?> #}
+                    <a href="{{ path('user_profile', {'id': null}) }}" class="link">
+                        {{ app.user.firstname }} {{ app.user.lastname }}
                     </a>
                     <br>
-                    <a href="{# /members/logout #}">déconnexion</a>
+                    <a href="{{ path('user_logout') }}">déconnexion</a>
                 </p>
             </div>
         {% else %}
             <ul class="anonymous-user">
-                <li><a href="{# /members/signin #}">S'inscrire</a></li>
-                <li><a href="{# /members/login #}">Se connecter</a></li>
+                <li><a href="{{ path('user_register') }}">S'inscrire</a></li>
+                <li><a href="{{ path('user_login') }}">Se connecter</a></li>
             </ul>
         {% endif %}
     </div>
     <div id="navigation" class="navigation">
         <div id="right-lateral-header" class="right-lateral-header"></div>
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             <ul class="logged-user">
                 <li class="picture">
                     <div class="picture-container">
-                        {# <?php if($_SESSION['front']['picture'] != '') { ?>
-                        <img class="resize-to-container" src="/assets/img/members/<?php echo $_SESSION['front']['picture']; ?>">
-                        <?php } ?>  #}
+                        {% if app.user.userProfile is not empty %}
+                            {% if app.user.userProfile.picture is not empty %}
+                                <img src="{{ asset('img/members/' ~ app.user.userProfile.picture) | imagine_filter('header_thumbnail') }}">
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </li>
                 <li class="name">
-                    <a href="{# /members/profile/<?php echo $_SESSION['front']['id']; ?> #}" class="link">
-                        {# <?php echo $_SESSION['front']['firstname']; ?> <?php echo $_SESSION['front']['lastname']; ?> #}
+                    <a href="{{ path('user_profile', {'id': app.user.id}) }}" class="link">
+                        {{ app.user.firstname }} {{ app.user.lastname }}
                     </a>
                 </li>
                 <li class="logout">
-                    <a href="{# /members/logout #}" class="link">
+                    <a href="{{ path('user_logout') }}" class="link">
                         <span class="icon-logout size-16"></span>
                     </a>
                 </li>
             </ul>
         {% else %}
             <ul class="anonymous-user">
-                <li><a href="{# /members/signin #}">S'inscrire</a></li>
-                <li><a href="{# /members/login #}">Se connecter</a></li>
+                <li><a href="{{ path('user_register') }}">S'inscrire</a></li>
+                <li><a href="{{ path('user_login') }}">Se connecter</a></li>
             </ul>
         {% endif %}
         <ul class="links">
             <li><a href="{{ path('homepage') }}">Rechercher des figs / sets</a></li>
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <li><a href="{# /collection #}">Ma collection</a></li>
-            <li><a href="{# /offers/add #}">Déposer une annonce</a></li>
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <li><a href="{{ path('user_collection') }}">Ma collection</a></li>
+                <li><a href="{{ path('offer_add') }}">Déposer une annonce</a></li>
             {% endif %}
-            <li><a href="{# /offers/listing #}">Toutes les annonces</a></li>
+            <li><a href="{{ path('offers_listing') }}">Toutes les annonces</a></li>
         </ul>
     </div>
     {% block content %}{% endblock %}
     <div class="footer">
         <ul class="links">
             <li>
-                <a href="{# /pages/contact #}" title="Signaler un problème au webmaster">
+                <a href="{{ path('page_contact') }}" title="Signaler un problème au webmaster">
                     Signaler un problème au webmaster
                 </a>
             </li>

@@ -1,0 +1,207 @@
+{% extends ':front:layout.html.twig' %}
+
+{% block title %}{{ offer.title }}{{ parent() }}{% endblock %}
+
+{% block body_class %}offers-view{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('librairies/slick/slick.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('librairies/slick/slick.js') }}"></script>
+    <script src="{{ asset('js/offers.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="content" class="content">
+        <div class="col-pd">
+            <div class="col-xs-12 col-pd">
+                {% for message in app.session.flashbag.get('success') %}
+                    <p class="success">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+                {% for message in app.session.flashbag.get('error') %}
+                    <p class="error">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+                <div class="page-header">
+                    <div class="page-header-picture">
+                        <div class="picture-container">
+                            {% if offer.offerPictures.first and offer.offerPictures.first.filename is not empty %}
+                                <img class="resize-to-container" src="{{ asset('img/offers/57x57/' ~ offer.offerPictures.first.filename) }}">
+
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="page-header-title">
+                        <h2 class="title">
+                            {{ offer.title }}
+                        </h2>
+                        <p class="subtitle">{{ offer.type }}</p>
+                    </div>
+                    <div class="page-header-info">
+                        {% if offer.price != 0 %}
+                            <span class="price">
+                                {{ offer.price }} €
+                            </span>
+                            <br>
+                        {% endif %}
+                        <span class="date">
+                            {{ offer.submittedAt|localizeddate('long', 'none')}} {{ offer.submittedAt|localizeddate('none', 'short')}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-s-pd font-size-zero">
+            <div class="slider-container col-xs-12 col-s-5 col-s-pd">
+                <div class="slider-for big-picture-container">
+                    {% for picture in offer.offerPictures %}
+                        <div>
+                            <img class="center-in-container" src="{{ asset('img/offers/400x300/' ~ picture.filename) }}">
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if offer.offerPictures is not empty %}
+                    <div class="slider-navigation little-picture-container">
+                        {% for picture in offer.offerPictures %}
+                            <div>
+                                <img class="resize-to-container" src="{{ asset('img/offers/57x57/' ~ picture.filename) }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-xs-12 col-s-7 font-size-default">
+                <div class="col-pd">
+                    <div class="col-pd col-s-no-pd">
+                        <div class="description">
+                            <p class="label">Description :</p>
+                            <p>{{ offer.description|nl2br }}</p>
+                        </div>
+                        <p class="label">Liste des figurines / sets :</p>
+                    </div>
+                </div>
+                <div class="col-s-pd">
+                    <table class="list offer-content">
+                        {% for item in offer.offerItems %}
+                            {% if item.minifigure is not empty %}
+                                <tr {{ loop.index % 2 == 0 ? 'class="even"' : 'class="uneven"' }}>
+                                    <td class="thumbnail">
+                                        <img class="resize-to-container" src="{{ asset('img/minifigures/57x57/' ~ item.minifigure.picture) }}">
+                                    </td>
+                                    <td class="info">
+                                        <span class="name">{{ item.minifigure.name }}</span>
+                                        <br>
+                                        {{ item.minifigure.serie.range.name }} - {{ item.minifigure.serie.name }}
+                                    </td>
+                                    <td class="count">
+                                        <div class="count-container">
+                                            x{{ item.itemCount }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% if item.set is not empty %}
+                                <tr {{ loop.index % 2 == 0 ? 'class="even"' : 'class="uneven"' }}>
+                                    <td class="thumbnail">
+                                        <img class="resize-to-container" src="{{ asset('img/sets/57x57/' ~ item.set.picture) }}">
+                                    </td>
+                                    <td class="info">
+                                        <span class="name">{{ item.set.name }} ({{ item.set.number }})</span>
+                                        <br>
+                                        {{ item.set.serie.range.name }} - {{ item.set.serie.name }}
+                                    </td>
+                                    <td class="count">
+                                        <div class="count-container">
+                                            x{{ item.itemCount }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') == false or (is_granted('IS_AUTHENTICATED_REMEMBERED') and app.user.id != offer.user.id) %}
+                    <div class="col-pd">
+                        <div class="member-info col-pd col-s-no-pd font-size-zero">
+                            <div class="col-xs-12 col-s-6 font-size-default">
+                                <p>
+                                    <strong>Membre :</strong> {{ offer.author }}
+                                    <br>
+                                    <strong>Lieu :</strong>
+                                    {% if offer.user.userProfile.city is not empty or offer.user.userProfile.region is not empty %}
+                                        {{ offer.user.userProfile.city }}{% if offer.user.userProfile.city is not empty or offer.user.userProfile.region is not empty %}, {% endif %}{{ offer.user.userProfile.region }}
+                                    {% else %}
+                                        inconnu
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="contact-button col-xs-12 col-s-6 font-size-default">
+                                <a class="btn-1-s" href="{{ path('user_contact', {'id': offer.user.id}) }}">
+                                    <span class="icon-mail"></span>
+                                    <span class="text">Contacter le membre</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-pd">
+            <div class="col-xs-12 col-pd">
+                <h3>Autres annonces de ce membre</h3>
+            </div>
+        </div>
+        <div class="col-s-pd">
+            <div class="col-xs-12 col-s-pd">
+                {% if otherOffers is not empty and otherOffers|length > 1 %}
+                    <table class="list offers-list">
+                        {% for otherOffer in otherOffers %}
+                            {% if otherOffer.id != offer.id %}
+                                <tr {{ loop.index % 2 == 0 ? 'class="even"' : 'class="uneven"' }} onclick="document.location='{{ path('offer_view', {'id': otherOffer.id}) }}'">
+                                <td class="thumbnail">
+                                    {% if otherOffer.offerPictures.first and otherOffer.offerPictures.first.filename is not empty %}
+                                        <img class="resize-to-container" src="{{ asset('img/offers/57x57/' ~ otherOffer.offerPictures.first.filename) }}">
+                                    {% endif %}
+                                </td>
+                                <td class="date">
+                                    <a href="{{ path('offer_view', {'id': otherOffer.id}) }}" title="Voir l'annonce &#147;{{ otherOffer.title }}&#148;">
+                                        {{ otherOffer.submittedAt|localizeddate('long', 'none')}}<br>
+                                        {{ otherOffer.submittedAt|localizeddate('none', 'short')}}
+                                    </a>
+                                </td>
+                                <td class="title">
+                                    <a href="{{ path('offer_view', {'id': otherOffer.id}) }}" title="Voir l'annonce &#147;{{ otherOffer.title }}&#148;">
+                                        {{ otherOffer.title }}
+                                        <span class="type">
+                                            {{ otherOffer.type }}
+                                        </span>
+                                    </a>
+                                </td>
+                                <td class="type">
+                                    <a href="{{ path('offer_view', {'id': otherOffer.id}) }}" title="Voir l'annonce &#147;{{ otherOffer.title }}&#148;">
+                                        {{ otherOffer.type }}
+                                    </a>
+                                </td>
+                                <td class="price">
+                                    <a href="{{ path('offer_view', {'id': otherOffer.id}) }}" title="Voir l'annonce &#147;{{ otherOffer.title }}&#148;">
+                                        {{ otherOffer.price }} €
+                                    </a>
+                                </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>Aucune autre annonce.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

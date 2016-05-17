@@ -1,0 +1,73 @@
+{% extends ':front:layout.html.twig' %}
+
+{% block title %}Contacter {{ contactedUser.firstname|capitalize }} {{ contactedUser.lastname|capitalize }}{{ parent() }}{% endblock %}
+
+{% block body_class %}members-contact{% endblock %}
+
+{% block content %}
+    <div id="content" class="content">
+        <div class="col-pd">
+            <div class="col-xs-12 col-pd">
+                {% for message in app.session.flashbag.get('success') %}
+                    <p class="success">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+                {% for message in app.session.flashbag.get('error') %}
+                    <p class="error">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+                <div class="page-header">
+                    <div class="page-header-picture">
+                        <div class="picture-container">
+                            {% if contactedUser.userProfile.picture is not empty %}
+                                <img src="{{ asset('img/members/' ~ contactedUser.userProfile.picture) | imagine_filter('thumbnail') }}">
+                            {% else %}
+                                <img class="resize-to-container" src="/assets/img/members/no-picture.png">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="page-header-title">
+                        <h2 class="title">
+                            Contacter {{ contactedUser.firstname|capitalize }} {{ contactedUser.lastname|capitalize }}
+                        </h2>
+                        <p class="subtitle">
+                            {{ contactedUser.userProfile.city }}
+                            {% if contactedUser.userProfile.city is not empty and contactedUser.userProfile.region is not empty %}, {% endif %}
+                            {{ contactedUser.userProfile.region }}
+                            {% if contactedUser.userProfile.city is not empty and contactedUser.userProfile.region is not empty %} / {% endif %}
+                            {{ contactedUser.email }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-pd txt-center">
+            {{ form_start(form) }}
+                <div class="col-xs-12 col-s-8 col-pd txt-left font-size-default">
+                    {% if offer is defined %}
+                        <p class="label">Objet du message :</p>
+                        <p>Votre annonce ''Minifigures diverses - état neuf'' du 1er septembre - 17h52</p>
+                    {% endif %}
+                        {{ form_errors(form.message) }}
+                        {{ form_label(form.message, 'Texte du message : *') }}
+                        {{ form_widget(form.message) }}
+                </div>
+                <div class="col-xs-12 col-pd txt-left">
+                    <p class="caption">
+                        * Champs obligatoires
+                    </p>
+                    <div class="buttons">
+                        <a href="{{ path('user_profile', {'id': contactedUser.id}) }}">
+                            Annuler
+                        </a>
+                        <button type="submit" class="btn-1-m">
+                            Envoyer
+                        </button>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

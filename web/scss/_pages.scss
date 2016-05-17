@@ -52,7 +52,7 @@
 	margin-top: 16px;
 }
 
-.login .login-container input[type='submit'] {
+.login .login-container button[type='submit'] {
 	display: block;
 	margin: 32px auto;
 }
@@ -70,6 +70,11 @@
 .signin .signin-container {
 	padding: 16px;
 	background: #e06342;
+}
+
+.signin ul.error {
+	color: #fff;
+	font-weight: bold;
 }
 
 .signin .signin-container input[type='text'],
@@ -97,7 +102,7 @@
 	font-weight: bold;
 }
 
-.signin .signin-container input[type='submit'] {
+.signin .signin-container button[type='submit'] {
     display: block;
     margin: 32px auto;
 }

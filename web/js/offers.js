@@ -110,7 +110,7 @@ $( document ).ready(function() {
 		});
 
 		// Ajout de plusieurs photos
-		$('.add-picture-link').on('click', function(e) {
+		/* $('.add-picture-link').on('click', function(e) {
 			e.preventDefault();
 			var newElement = $('.input-file-container:last').clone();
 			var input = newElement.find('.picture');
@@ -183,9 +183,77 @@ $( document ).ready(function() {
 
 			});
 
-		}
+		} */
 
 	}
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+	// Test d'ajout d'un élément avec le formulaire Symfony
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
+	var $container = $('#offer_offer_pictures');
+
+	// On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
+	var index = $container.find(':input').length;
+
+	// On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
+	$('.add-picture-link').click(function(e) {
+		addOfferPicture($container);
+
+		e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+		return false;
+	});
+
+	// On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
+	if (index == 0) {
+		addOfferPicture($container);
+	} else {
+		// S'il existe déjà des éléments, on ajoute un lien de suppression pour chacun d'entre eux
+		//$container.children('div').each(function() {
+		//	addDeleteLink($(this));
+		//});
+	}
+
+	// La fonction qui ajoute un formulaire OfferPictureType
+	function addOfferPicture($container) {
+		// Dans le contenu de l'attribut « data-prototype », on remplace :
+		// - le texte "__name__label__" qu'il contient par le label du champ
+		// - le texte "__name__" qu'il contient par le numéro du champ
+		var template = $container.attr('data-prototype')
+				.replace(/__name__/g,        index)
+			;
+
+		// On crée un objet jquery qui contient ce template
+		var $prototype = $(template);
+
+		// On ajoute au prototype un lien pour pouvoir supprimer la catégorie
+		// addDeleteLink($prototype);
+
+		// On ajoute le prototype modifié à la fin de la balise <div>
+		$container.append($prototype);
+
+		// Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
+		index++;
+	}
+
+	// La fonction qui ajoute un lien de suppression d'une catégorie
+	function addDeleteLink($prototype) {
+		// Création du lien
+		var $deleteLink = $('<a href="#">Supprimer</a>');
+
+		// Ajout du lien
+		$prototype.append($deleteLink);
+
+		// Ajout du listener sur le clic du lien pour effectivement supprimer l'élément
+		$deleteLink.click(function(e) {
+			$prototype.remove();
+
+			e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+			return false;
+		});
+	}
+
 
 });
 

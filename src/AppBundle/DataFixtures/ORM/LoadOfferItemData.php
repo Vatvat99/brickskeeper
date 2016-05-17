@@ -32,7 +32,13 @@ class LoadOfferItemData extends AbstractFixture implements OrderedFixtureInterfa
             ],
             4 => [
                 'offer' => $this->getReference('offer_2'),
-                'minifigure' => $this->getReference('minifigure_39'),
+                'minifigure' => null,
+                'set' => $this->getReference('set_1'),
+                'item_count' => 1,
+            ],
+            5 => [
+                'offer' => $this->getReference('offer_3'),
+                'minifigure' => $this->getReference('minifigure_32'),
                 'set' => null,
                 'item_count' => 1,
             ],

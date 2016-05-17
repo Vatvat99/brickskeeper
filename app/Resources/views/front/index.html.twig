@@ -13,107 +13,146 @@
     <div class="picture">
         <div class="search-container">
             <div class="search">
-                <h1>
-                    Recherche
-                </h1>
+                <h1>Recherche</h1>
                 <div class="buttons-container font-size-zero">
                     <button class="item-type-button btn-2-s font-size-default active" type="button" data-type="minifigure">Minifigs</button>
                     <button class="item-type-button btn-2-s font-size-default" type="button" data-type="set">Sets</button>
                 </div>
-                <form action="{# /search #}" method="post">
-                    <input type="hidden" name="item_type" class="item-type-field" value="minifigure">
+                {{ form_start(form) }}
                     <div class="field">
-                        <input type="text" id="range" name="range" value="Gamme" readonly>
+                        {{ form_errors(form.range) }}
+                        {{ form_widget(form.range, {'attr': {'readonly': true, 'value': 'Gamme'}}) }}
                         <div class="range erase hidden"></div>
                     </div>
                     <div class="field">
-                        <input type="text" id="serie" name="serie" value="Série" readonly>
+                        {{ form_errors(form.serie) }}
+                        {{ form_widget(form.serie, {'attr': {'readonly': true, 'value': 'Série'}}) }}
                         <div class="serie erase hidden"></div>
                     </div>
-                    <input type="hidden" id="selected-range-alias" name="selected_range_alias" value="none">
-                    <input type="hidden" id="selected-serie-alias" name="selected_serie_alias" value="none">
-                    <input type="submit" class="btn-2-m" value="rechercher">
-                </form>
+                    <button type="submit" class="btn-2-m">rechercher</button>
+                    {{ form_widget(form.item_type, {'attr': {'class': 'item-type-field', 'value': 'minifigure'}}) }}
+                    {{ form_widget(form.selected_range_alias, {'attr': {'value': 'none'}}) }}
+                    {{ form_widget(form.selected_serie_alias, {'attr': {'value': 'none'}}) }}
+                {{ form_end(form) }}
             </div>
             <div class="ranges-list" data-item-type="minifigure">
                 <ul>
-                {# <?php
-                // On liste toutes les gammes
-                foreach ($ranges as $range) {
-                    if($range->minifigures_count > 0) { ?>
-                    <li data-alias="<?php echo $range->alias; ?>"><img src="/assets/img/ranges/<?php echo $range->picture; ?>"><?php echo $range->name; ?></li>
-                    <?php }
-                } ?> #}
+                    {# On liste toutes les gammes #}
+                    {% for range in ranges %}
+                        {% if range.minifigures_count > 0 %}
+                            <li data-alias="{{ range.slug }}">
+                                <img src="{{ asset('img/ranges/' ~ range.picture) }}">
+                                {{ range.name }}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
             </div>
             <div class="ranges-list" data-item-type="set">
                 <ul>
-                {# <?php
-                // On liste toutes les gammes
-                foreach ($ranges as $range) {
-                    if($range->sets_count > 0) { ?>
-                    <li data-alias="<?php echo $range->alias; ?>"><img src="/assets/img/ranges/<?php echo $range->picture; ?>"><?php echo $range->name; ?></li>
-                    <?php }
-                } ?> #}
+                    {# On liste toutes les gammes #}
+                    {% for range in ranges %}
+                        {% if range.sets_count > 0 %}
+                            <li data-alias="{{ range.slug }}">
+                                <img src="{{ asset('img/ranges/' ~ range.picture) }}">
+                                {{ range.name }}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
             </div>
-
-            {# <?php
-            // On liste toutes les séries comprises dans une gamme
-            foreach ($ranges as $range) {
-                // Si il y a des séries dans cette gamme, on les liste
-                if(array_key_exists(0, $range->series)) { ?>
-                <div class="series-list" data-range="<?php echo $range->alias; ?>" data-item-type="minifigure">
-                    <ul>
-                        <?php foreach ($range->series as $serie) {
-                        if($serie->minifigures_count > 0) { ?>
-                        <li data-alias="<?php echo $serie->alias; ?>"><img src="/assets/img/series/<?php echo $serie->picture; ?>"><?php echo $serie->name; ?></li>
-                        <?php }
-                            } ?>
-                    </ul>
-                </div>
-                <div class="series-list" data-range="<?php echo $range->alias; ?>" data-item-type="set">
-                    <ul>
-                        <?php foreach ($range->series as $serie) {
-                        if($serie->sets_count > 0) { ?>
-                        <li data-alias="<?php echo $serie->alias; ?>"><img src="/assets/img/series/<?php echo $serie->picture; ?>"><?php echo $serie->name; ?></li>
-                        <?php }
-                            } ?>
-                    </ul>
-                </div>
-                <?php }
-            } ?> #}
-
+            {# On liste toutes les séries comprises dans une gamme #}
+            {%  for range in ranges %}
+                {% if range.series is not empty %}
+                    <div class="series-list" data-range="{{ range.slug }}" data-item-type="minifigure">
+                        <ul>
+                            {% for serie in range.series %}
+                                {% if serie.minifigures_count > 0 %}
+                                    <li data-alias="{{ serie.slug }}">
+                                        <img src="{{ asset('img/series/' ~ serie.picture) }}">
+                                        {{ serie.name }}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="series-list" data-range="{{ range.slug }}" data-item-type="set">
+                        <ul>
+                            {%  for serie in range.series %}
+                                {% if serie.sets_count > 0 %}
+                                    <li data-alias="{{ serie.slug }}">
+                                        <img src="{{ asset('img/series/' ~ serie.picture) }}">
+                                        {{ serie.name }}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {%  endfor %}
+            {# On liste toutes les séries comprises dans une gamme #}
+            {% for range in ranges %}
+                {% if range.series is not empty %}
+                    <div class="series-list" data-range="{{ range.slug }}" data-item-type="minifigure">
+                        <ul>
+                            {% for serie in range.series %}
+                                {% if serie.minifigures_count > 0 %}
+                                    <li data-alias="{{ serie.slug }}">
+                                        <img src="{{ asset('img/series/' ~ serie.picture) }}">
+                                        {{ serie.name }}
+                                    </li>
+                                {% endif %}
+                            {%  endfor %}
+                        </ul>
+                    </div>
+                    <div class="series-list" data-range="<?php echo $range->alias; ?>" data-item-type="set">
+                        <ul>
+                            {% for serie in range.series %}
+                                {% if serie.sets_count > 0 %}
+                                    <li data-alias="{{ serie.slug }}">
+                                        <img src="{{ asset('img/series/' ~ serie.picture) }}">
+                                        {{ serie.name }}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endfor %}
             <div class="series-list" data-range="none" data-item-type="minifigure">
                 <ul>
-                    {# <?php
-                    // On liste toutes les séries de toutes les gammes
-                    foreach ($ranges as $range) {
-                        // Si il y a des séries dans cette gamme, on les liste
-                        if(array_key_exists(0, $range->series)) {
-                        foreach ($range->series as $serie) {
-                        if($serie->minifigures_count > 0) { ?>
-                        <li data-alias="<?php echo $serie->alias; ?>"><img src="/assets/img/series/<?php echo $serie->picture; ?>"><?php echo $serie->name; ?></li>
-                        <?php }
-                            }
-                        }
-                    } ?> #}
+                    {# On liste toutes les séries de toutes les gammes #}
+                    {% for range in ranges %}
+                        {# Si il y a des séries dans cette gamme, on les liste #}
+                        {% if range.series is not empty %}
+                            {% for serie in range.series %}
+                                {% if serie.minifigures_count > 0 %}
+                                    <li data-alias="{{ serie.slug }}">
+                                        <img src="{{ asset('img/series/' ~ serie.picture) }}">
+                                        {{ serie.name }}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
                 </ul>
             </div>
             <div class="series-list" data-range="none" data-item-type="set">
                 <ul>
-                    {# <?php
-                    // On liste toutes les séries de toutes les gammes
-                    foreach ($ranges as $range) {
-                        // Si il y a des séries dans cette gamme, on les liste
-                        if(array_key_exists(0, $range->series)) {
-                        foreach ($range->series as $serie) {
-                        if($serie->sets_count > 0) { ?>
-                        <li data-alias="<?php echo $serie->alias; ?>"><img src="/assets/img/series/<?php echo $serie->picture; ?>"><?php echo $serie->name; ?></li>
-                        <?php }
-                            }
-                        }
-                    } ?> #}
+                    {# On liste toutes les séries de toutes les gammes #}
+                    {% for range in ranges %}
+                        {# Si il y a des séries dans cette gamme, on les liste #}
+                        {% if range.series is not empty %}
+                            {% for serie in range.series %}
+                                {% if serie.sets_count > 0 %}
+                                    <li data-alias="{{ serie.slug }}">
+                                        <img src="{{ asset('img/series/' ~ serie.picture) }}">
+                                        {{ serie.name }}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
                 </ul>
             </div>
         </div>

@@ -1,0 +1,25 @@
+{% extends ':front:layout.html.twig' %}
+
+{%  block title %}Activation du compte{{ parent() }}{% endblock %}
+
+{% block body_class %}signin{% endblock %}
+
+{% block content %}
+    <div id="content" class="content col-pd">
+        <div class="confirmation col-pd">
+            {% if message == 'active' %}
+                <h1>Bravo !<br>Vous êtes inscrit<br><img src="{{ asset('img/success-01.png') }}" alt="Succès"></h1>
+                <p>Votre adresse mail est confirmée. Vous pouvez dès à présent utiliser votre compte.</p>
+                <h3><a href="{{ path('user_login') }}">Commencez votre collection</a></h3>
+            {% elseif message == 'already-active' %}
+                <h1>Compte déjà actif<br><img src="{{ asset('img/interrogation-01.png') }}" alt="Interrogation"></h1>
+                <p>Votre adresse mail a déjà été confirmée. Vous pouvez déjà utiliser votre compte.</p>
+                <h3><a href="{{ path('user_login') }}">Commencez votre collection</a></h3>
+            {% else %}
+                <h1>Oups...<br><img src="{{ asset('img/failure-01.png') }}" alt="échec"></h1>
+                <p>Votre compte ne peut pas être activé. Le lien de confirmation de votre adresse e-mail semble être erroné.</p>
+                <h3><a href="{{ path('homepage') }}">Retourner à l'accueil</a></h3>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -32,7 +32,7 @@ class MinifigureSet
     /**
      * @var Minifigure
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Minifigure", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Minifigure", inversedBy="minifigure_sets", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $minifigure;
@@ -40,7 +40,7 @@ class MinifigureSet
     /**
      * @var Set
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Set", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Set", inversedBy="set_minifigures", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $set;

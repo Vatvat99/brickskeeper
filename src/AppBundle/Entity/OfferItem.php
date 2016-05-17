@@ -29,12 +29,14 @@ class OfferItem
     private $offer;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Minifigure", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Minifigure", inversedBy="offer_items", cascade={"persist"})
+     * @ORM\JoinColumn(unique=false)
      */
     private $minifigure;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Set", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Set", inversedBy="offer_items", cascade={"persist"})
+     * @ORM\JoinColumn(unique=false)
      */
     private $set;
 

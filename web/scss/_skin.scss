@@ -300,6 +300,7 @@
 	line-height: 32px;
 	width: 32px;
 	text-align: center;
+	text-decoration: none;
 }
 
 .pagination a:first-child {
@@ -318,7 +319,7 @@
 	background: #c54523;
 }
 
-.bottom-pagination {
+.bottom-pagination .pagination {
 	margin: 24px 0 0 0;
 }
 
@@ -425,13 +426,13 @@
 /* --- Types d'annonces --- */
 
 .type-title-label,
-.type-element-label {
+.type-element label {
 	display: inline-block;
 	vertical-align: middle;
 	margin: 0 16px 16px 0;
 }
 
-.type-element-label {
+.type-element label {
 	font-weight: normal;
 }
 

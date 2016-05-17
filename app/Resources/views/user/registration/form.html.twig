@@ -1,0 +1,55 @@
+{% extends ':front:layout.html.twig' %}
+
+{% block title %}Inscription{{ parent() }}{% endblock %}
+
+{% block body_class %}signin{% endblock %}
+
+{% block content %}
+    <div id="content" class="content col-pd">
+        <div class="col-pd">
+            <h1>Créer mon compte</h1>
+        </div>
+        <div class="font-size-zero">
+            <div class="col-xs-12 col-s-5 col-pd font-size-default">
+                <div class="signin-container">
+                    {% for message in app.session.flashbag.get('error') %}
+                        <p class="confirmation-message">
+                            {{ message }}
+                        </p>
+                    {% endfor %}
+                    {{ form_start(form) }}
+                        {{ form_errors(form.firstname) }}
+                        {{ form_label(form.firstname, 'Votre prénom') }}
+                        {{ form_widget(form.firstname) }}
+                        {{ form_errors(form.lastname) }}
+                        {{ form_label(form.lastname, 'Votre nom') }}
+                        {{ form_widget(form.lastname) }}
+                        {{ form_errors(form.email) }}
+                        {{ form_label(form.email, 'Votre adresse e-mail') }}
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.plainPassword.first) }}
+                        {{ form_label(form.plainPassword.first, 'Choisissez un mot de passe') }}
+                        {{ form_widget(form.plainPassword.first) }}
+                        {{ form_errors(form.plainPassword.second) }}
+                        {{ form_label(form.plainPassword.second, 'Confirmez votre mot de passe') }}
+                        {{ form_widget(form.plainPassword.second) }}
+                        <p class="caption">Tous les champs sont obligatoires</p>
+                        <button class="btn-2-m" type="submit">S'inscrire</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            <div class="col-xs-12 col-s-7 col-pd font-size-default">
+                <div class="argument">
+                    <h3>Gérez votre propre collection</h3>
+                    <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet.</p>
+                    <p><img src="{{ asset('img/rectangle-01.png') }}" alt=""></p>
+                </div>
+                <div class="argument">
+                    <h3>Effectuez des transactions</h3>
+                    <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet.</p>
+                    <p><img src="{{ asset('img/rectangle-01.png') }}" alt=""></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
